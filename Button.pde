@@ -2,16 +2,18 @@ class Button {
   
   float x,y;
   int bW, bH;
+  int textSize;
   boolean isHovering;
   boolean isSelected;
   String buttonText;
   
-  Button(float _x, float _y, int _width, int _height, String _buttonText){
+  Button(float _x, float _y, int _width, int _height, String _buttonText, int _textSize){
     x = _x;
     y = _y;
     bW = _width;
     bH = _height;
     buttonText = _buttonText;
+    textSize = _textSize;
   }
   
   void drawButton(){
@@ -25,7 +27,7 @@ class Button {
     rect(x, y, bW, bH, 7); //draw the button and round the corners
     textAlign(CENTER, CENTER);
     fill(0);
-    textSize(40);
+    textSize(textSize);
     text(buttonText, x+(bW/2), y+(bH/2)-5);
   }
   

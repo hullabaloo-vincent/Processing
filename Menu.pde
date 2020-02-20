@@ -26,15 +26,9 @@ public class Menu {
     frame.setJMenuBar(menu_bar);
     JMenu import_menu = new JMenu("Import");
     JMenu text_menu = new JMenu("Run");
-    JMenu shape_menu = new JMenu("shape");
-    JMenu image_menu = new JMenu("image");
-    JMenu video_menu = new JMenu("video");
 
     menu_bar.add(import_menu);
     menu_bar.add(text_menu);
-    menu_bar.add(shape_menu);
-    menu_bar.add(image_menu);
-    menu_bar.add(video_menu);
 
     JMenuItem new_file = new JMenuItem("Import file");
     JMenuItem new_folder = new JMenuItem("Import folder");

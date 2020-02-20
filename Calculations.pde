@@ -4,8 +4,8 @@ class Calculations{
     ArrayList<String> sentimentCalc = new ArrayList<String>();
 
     Calculations(){} //init class
-    void runEval(){
-        String[] values = mainText.split("\\."); //split text into sentences
+    void runEval(String _aText){
+        String[] values = _aText.split("\\."); //split text into sentences
         for (int i = 0; i < values.length; i++){
             infoText = "Checking sentence " + i + " of " + values.length;
         
@@ -103,6 +103,10 @@ class Calculations{
             str[j] = al.get(j); 
         } 
         return str;
+    }
+    
+    ArrayList<String> getSentiment(){
+        return sentimentCalc;
     }
 }
 
