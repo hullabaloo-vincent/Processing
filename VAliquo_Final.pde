@@ -62,13 +62,51 @@ void mousePressed(){
   for (int i = 0; i < buttons.size(); i++){
     if (buttons.get(i).inside()){
       if (buttons.get(0).inside()){
-        calc.runEval(textArea.getText());
-        String[] textTest = calc.getArray(calc.getSentiment());
-        System.out.println(Arrays.toString(textTest));
+        thread("runEval");
+     //   calc.runEval(textArea.getText());
+        //String[] textTest = calc.getArray(calc.getSentiment());
+       // System.out.println(Arrays.toString(textTest));
       }
     }
   }
 }
+
+void runEval(){
+  String[] values = textArea.getText().split("\\."); //split text into sentences
+  for (int i = 0; i < values.length; i++){
+    infoText = "Checking sentence " + i + " of " + values.length;
+
+    checkSentence cs = new checkSentence(values[i]);
+    //check part of speech
+    ArrayList<String> tokenRaw = cs.getToken("PartOfSpeech");
+    ArrayList<String> tokenText = cs.getToken("Text");
+    ArrayList<String> tokenSentiment = cs.getToken("SentimentClass");
+
+    /* Uncomment to debug */
+    // String[] textTest = getArray(tokenText);
+    // System.out.println(Arrays.toString(textTest));
+    // String[] textTest2 = getArray(tokenRaw);
+    // System.out.println(Arrays.toString(textTest2));
+
+
+    //check sentence sentiment [negative, neutral, positive]
+    String sentenceSentiment = cs.getSentiment();
+    calc.sentimentCalc.add(sentenceSentiment); //add calculated sentiment to arraylist
+
+    ArrayList<String> txtToken = calc.getSentenceText(tokenText);
+    ArrayList<String> sentimentToken = calc.getSentenceText(tokenSentiment);
+
+    ArrayList<String> token = new ArrayList<String>();
+    for(int j = 0; j < tokenRaw.size(); j++){
+        String cleanOutput = tokenRaw.get(j);
+        cleanOutput = cleanOutput.substring(cleanOutput.lastIndexOf("=") + 1);
+        cleanOutput = cleanOutput.substring(0, cleanOutput.length() - 1);
+        token.add(cleanOutput);
+        calc.speechChecker(cleanOutput, values[i], txtToken.get(j));
+    }
+  }
+}
+
 
 void buildFrame() {
   mp = new Menu(this, "Media", 800, 500);
