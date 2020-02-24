@@ -1,3 +1,11 @@
+/*
+*
+* Program made by Vincent Aliquo
+* MM/DD/2020 | ITGM 326
+*
+*/
+
+
 /* 
 *  TOKENS
 *  "Text", "PartOfSpeech", "Lemma", "Answer", "NamedEntityTag",
@@ -63,9 +71,6 @@ void mousePressed(){
     if (buttons.get(i).inside()){
       if (buttons.get(0).inside()){
         thread("runEval");
-     //   calc.runEval(textArea.getText());
-        //String[] textTest = calc.getArray(calc.getSentiment());
-       // System.out.println(Arrays.toString(textTest));
       }
     }
   }

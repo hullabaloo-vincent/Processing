@@ -7,10 +7,9 @@ class Calculations{
     void runEval(String _aText){
         String[] values = _aText.split("\\."); //split text into sentences
         for (int i = 0; i < values.length; i++){
-            infoText = "Checking sentence " + i + " of " + values.length;
         
-            checkSentence cs = new checkSentence(values[i]);
-            //check part of speech
+            checkSentence cs = new checkSentence(values[i]); //initiates NLP API and runs a sentence through it
+            //get raw data collected through the NLP API
             ArrayList<String> tokenRaw = cs.getToken("PartOfSpeech");
             ArrayList<String> tokenText = cs.getToken("Text");
             ArrayList<String> tokenSentiment = cs.getToken("SentimentClass");
@@ -40,6 +39,8 @@ class Calculations{
         }
     }
 
+    /*----------------------------------------*/
+    /* Check if potentially problamatic parts of speech are present in the sentence*/
     void speechChecker(String _output, String _stringValue, String _txtValue){
         String[] abbr = {"RBR", "JJR", "UH", "JJ", "VB"};
         for (int i = 0; i < abbr.length -1; i++){
@@ -49,10 +50,7 @@ class Calculations{
                     incrementValues(i);
                 }else{
                     /*there are quotes in this sentence. Run check to see if word is inside quotes or not*/
-                    String crop = _stringValue;
-                    crop = crop.substring(crop.indexOf("\"") + 1);
-                    crop = crop.substring(0, crop.lastIndexOf("\""));
-                    if (crop.indexOf(_txtValue) != -1){
+                    if (insideQuotes(_stringValue, _txtValue)){
                         //inside quotes, don't do anything
                         println("Inside quotes");
                     }else{
@@ -64,7 +62,10 @@ class Calculations{
             }
         }
     }
+    /*----------------------------------------*/
 
+    /*----------------------------------------*/
+    /* FIncrement parts of speech */
     void incrementValues(int _inst){
         switch(_inst){
             case 0:
@@ -84,7 +85,27 @@ class Calculations{
             break;
         }
     }
+    /*----------------------------------------*/
 
+    /*----------------------------------------*/
+    /* Function to check whether _text is inside quotes present in String _input */
+    boolean insideQuotes(String _input, String _text){
+        String crop = _input;
+        crop = crop.substring(crop.indexOf("\"") + 1);
+        crop = crop.substring(0, crop.lastIndexOf("\""));
+        if (crop.indexOf(_text) != -1){
+            //inside quotes
+            return true;
+        }else{
+            //outside quotes
+            return false;
+        }
+    }
+    /*----------------------------------------*/
+
+    
+    /*----------------------------------------*/
+    /* Turns the raw data from the NLP API into an easily readable string */
     ArrayList<String> getSentenceText(ArrayList<String> _base){
         ArrayList<String> textToken = new ArrayList<String>();
             for(int k = 0; k < _base.size(); k++){
@@ -95,7 +116,10 @@ class Calculations{
             }
         return textToken;
     }
+    /*----------------------------------------*/
 
+    /*----------------------------------------*/
+    /* Converts ArrayList into string array */
     String[] getArray(ArrayList<String> al){
         String str[] = new String[al.size()]; 
 
@@ -104,16 +128,9 @@ class Calculations{
         } 
         return str;
     }
+    /*----------------------------------------*/
     
     ArrayList<String> getSentiment(){
         return sentimentCalc;
     }
 }
-
-/*
-
- When there is no more use of t1, make the object referred by t1 eligible for garbage collection */        
-  //      t1 = null; 
-   
-        // calling garbage collector 
-     //   System.gc(); 
