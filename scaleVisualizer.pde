@@ -25,7 +25,8 @@ class scaleVisualizer{
             yPos + (sin(radians(91+i - 2)) * multp));
         }
 
-        deg = int(map( mouseY, 0, height, 0, 360));
+       // deg = int(map( mouseY, 0, height, 0, 360));
+       deg = 0;
 
         noStroke();
         fill(255, 227, 13, 130);

@@ -1,44 +1,11 @@
 class Calculations{
 
     int compAdv, compAdj, interj, adj, vb = 0;
+    
     ArrayList<String> sentimentCalc = new ArrayList<String>();
     ArrayList<String> pTerms = new ArrayList<String>(); //adds problematic terms to array
 
     Calculations(){} //init class
-    void runEval(String _aText){
-        String[] values = _aText.split("\\."); //split text into sentences
-        for (int i = 0; i < values.length; i++){
-        
-            checkSentence cs = new checkSentence(values[i]); //initiates NLP API and runs a sentence through it
-            //get raw data collected through the NLP API
-            ArrayList<String> tokenRaw = cs.getToken("PartOfSpeech");
-            ArrayList<String> tokenText = cs.getToken("Text");
-            ArrayList<String> tokenSentiment = cs.getToken("SentimentClass");
-
-            /* Uncomment to debug */
-            // String[] textTest = getArray(tokenText);
-            // System.out.println(Arrays.toString(textTest));
-            // String[] textTest2 = getArray(tokenRaw);
-            // System.out.println(Arrays.toString(textTest2));
-
-        
-            //check sentence sentiment [negative, neutral, positive]
-            String sentenceSentiment = cs.getSentiment();
-            sentimentCalc.add(sentenceSentiment); //add calculated sentiment to arraylist
-
-            ArrayList<String> txtToken = getSentenceText(tokenText);
-            ArrayList<String> sentimentToken = getSentenceText(tokenSentiment);
-
-            ArrayList<String> token = new ArrayList<String>();
-            for(int j = 0; j < tokenRaw.size(); j++){
-                String cleanOutput = tokenRaw.get(j);
-                cleanOutput = cleanOutput.substring(cleanOutput.lastIndexOf("=") + 1);
-                cleanOutput = cleanOutput.substring(0, cleanOutput.length() - 1);
-                token.add(cleanOutput);
-                speechChecker(cleanOutput, values[i], txtToken.get(j));
-            }
-        }
-    }
 
     void checkPTerms(String _aText){
        try{ 

@@ -5,7 +5,6 @@
 *
 */
 
-
 /* 
 *  TOKENS
 *  "Text", "PartOfSpeech", "Lemma", "Answer", "NamedEntityTag",
@@ -31,6 +30,8 @@ import g4p_controls.*;
 Menu mp;
 Calculations calc;
 ArrayList<Button> buttons;
+
+int sentNeg, sentNeu, sentPos = 0;
 
 Button b_run;
 String mainText;
@@ -98,6 +99,9 @@ void runEval(){
     //check sentence sentiment [negative, neutral, positive]
     String sentenceSentiment = cs.getSentiment();
     calc.sentimentCalc.add(sentenceSentiment); //add calculated sentiment to arraylist
+    if (sentenceSentiment.equalsIgnoreCase("Negative")){sentNeg++;}
+    if (sentenceSentiment.equalsIgnoreCase("Neutral")){sentNeu++;}
+    if (sentenceSentiment.equalsIgnoreCase("Positive")){sentPos++;}
 
     ArrayList<String> txtToken = calc.getSentenceText(tokenText);
     ArrayList<String> sentimentToken = calc.getSentenceText(tokenSentiment);
@@ -111,6 +115,9 @@ void runEval(){
         calc.speechChecker(cleanOutput, values[i], txtToken.get(j));
     }
   }
+  println("Negative: " + sentNeg);
+  println("Neutral: " + sentNeu);
+  println("Positive: " + sentPos);
 }
 
 
