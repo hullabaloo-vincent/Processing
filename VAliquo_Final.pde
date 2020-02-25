@@ -43,6 +43,7 @@ void setup(){
   buildFrame();
   smooth();
   calc = new Calculations();
+  calc.checkPTerms("");
   buttons = new ArrayList<Button>();
   buttons.add(new Button(550, 40, 100, 50, "Run", 20));
   mainText = "By Monday, more than 70,000 run people shooting had been infected by the coronavirus and over 1,700 had died worldwide" + 

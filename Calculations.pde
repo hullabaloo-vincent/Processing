@@ -2,6 +2,7 @@ class Calculations{
 
     int compAdv, compAdj, interj, adj, vb = 0;
     ArrayList<String> sentimentCalc = new ArrayList<String>();
+    ArrayList<String> pTerms = new ArrayList<String>(); //adds problematic terms to array
 
     Calculations(){} //init class
     void runEval(String _aText){
@@ -36,6 +37,23 @@ class Calculations{
                 token.add(cleanOutput);
                 speechChecker(cleanOutput, values[i], txtToken.get(j));
             }
+        }
+    }
+
+    void checkPTerms(String _aText){
+       try{ 
+            String programDir =  dataPath("");
+            String aWords = new Scanner(new File(programDir + "//Alerts.words")).useDelimiter("\\A").next();
+            String[] aWordsSplit = aWords.split("\\,");
+            
+            for (int i = 0; i < aWordsSplit.length; i++){
+                //check if word word is present in string
+                if (_aText.indexOf(aWordsSplit[0]) != -1){
+                   //check if word is in quotes (NOT DONE)
+                }
+            }
+        }catch(FileNotFoundException fx){
+            println("Couldn't find word library");
         }
     }
 
