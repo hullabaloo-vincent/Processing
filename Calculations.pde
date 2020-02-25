@@ -48,8 +48,11 @@ class Calculations{
             
             for (int i = 0; i < aWordsSplit.length; i++){
                 //check if word word is present in string
-                if (_aText.indexOf(aWordsSplit[0]) != -1){
-                   //check if word is in quotes (NOT DONE)
+                if (_aText.indexOf(aWordsSplit[i]) != -1){
+                   if (!insideQuotes(_aText,aWordsSplit[i])){
+                       println("Problem word found: " + aWordsSplit[i]);
+                       pTerms.add(aWordsSplit[i]);
+                   }
                 }
             }
         }catch(FileNotFoundException fx){
