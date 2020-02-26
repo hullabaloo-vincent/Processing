@@ -3,8 +3,7 @@ PVector[] vertice2 = new PVector[360];
 
 float xPos; 
 float yPos; 
-int deg = 360;
-PFont font;
+int deg = 0;
 
 class scaleVisualizer{
     
@@ -15,7 +14,6 @@ class scaleVisualizer{
 
     void show(){
         float multp     = 100;
-        font = createFont("Helvetica", 35);
 
         for (int i = 0; i< vertice1.length;i++){
             vertice1[i] = new PVector(xPos + (cos(radians(91+i)) * multp), 
@@ -24,9 +22,6 @@ class scaleVisualizer{
             vertice2[i] = new PVector(xPos + (cos(radians(91+i - 2)) * multp), 
             yPos + (sin(radians(91+i - 2)) * multp));
         }
-
-       // deg = int(map( mouseY, 0, height, 0, 360));
-       deg = 0;
 
         noStroke();
         fill(255, 227, 13, 130);
@@ -43,10 +38,13 @@ class scaleVisualizer{
         strokeWeight(6);
         //border
         ellipse(xPos, yPos, 200, 200);
-        textFont(font, 35);
         stroke(#e3e6ff);
         strokeWeight(7);
         fill(#e3e6ff);
         arc(xPos, yPos, 200, 200, 0, PI);
+    }
+
+    void updateDegree(int _deg){
+        deg = _deg;
     }
 }
