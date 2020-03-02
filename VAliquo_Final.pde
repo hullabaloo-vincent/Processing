@@ -29,6 +29,7 @@ import g4p_controls.*;
 
 Menu mp;
 Calculations calc;
+scaleVisualizer sentimentVis;
 ArrayList<Button> buttons;
 
 int sentNeg, sentNeu, sentPos = 0;
@@ -43,6 +44,7 @@ GTextArea textArea;
 void setup(){
   buildFrame();
   smooth();
+  sentimentVis = new scaleVisualizer(600, 200);
   calc = new Calculations();
   calc.checkPTerms("");
   buttons = new ArrayList<Button>();
@@ -64,8 +66,7 @@ void draw(){
   for (int i = 0; i < buttons.size(); i++){
     buttons.get(i).drawButton(); //show all the buttons in the arraylist
   }
-  scaleVisualizer a = new scaleVisualizer(600, 200);
-  a.show();
+  sentimentVis.show();
 }
 
 void mousePressed(){
@@ -115,6 +116,7 @@ void runEval(){
         calc.speechChecker(cleanOutput, values[i], txtToken.get(j));
     }
   }
+  sentimentVis.updateDegree(150);
   println("Negative: " + sentNeg);
   println("Neutral: " + sentNeu);
   println("Positive: " + sentPos);
