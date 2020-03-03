@@ -35,9 +35,11 @@ class Calculations{
             if (_output.equalsIgnoreCase(abbr[i])){
                 println("Testing: " + abbr[i] + " (" + _txtValue + ")");
                 if (_stringValue.indexOf('\"') == -1){
-                    if (_sentimentVal.equalsIgnoreCase("Positive") || _sentimentVal.equalsIgnoreCase("Negative")){
-                        incrementValues(i);
-                        pTerms.add(_txtValue);
+                    if (i == 0 || i ==1 || i == 5 || i == 6){
+                        if (_sentimentVal.equalsIgnoreCase("Positive") || _sentimentVal.equalsIgnoreCase("Negative")){
+                            incrementValues(i);
+                            pTerms.add(_txtValue);
+                        }
                     }
                 }else{
                     /*there are quotes in this sentence. Run check to see if word is inside quotes or not*/
@@ -46,9 +48,11 @@ class Calculations{
                     }else{
                         //outside quotes
                         println("Sentiment check: " + _sentimentVal + " for " + _txtValue);
-                        if (_sentimentVal.equalsIgnoreCase("Positive") || _sentimentVal.equalsIgnoreCase("Negative")){
-                            incrementValues(i);
-                            pTerms.add(_txtValue);
+                        if (i == 0 || i ==1 || i == 5 || i == 6){
+                            if (_sentimentVal.equalsIgnoreCase("Positive") || _sentimentVal.equalsIgnoreCase("Negative")){
+                                incrementValues(i);
+                                pTerms.add(_txtValue);
+                            }
                         }
                     }
                 }

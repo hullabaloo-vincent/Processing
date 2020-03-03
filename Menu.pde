@@ -1,5 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -8,14 +10,13 @@ import java.io.IOException;
 
 public class Menu {
   JFrame frame;
-
+  ActionEvent pubEvent;
   public Menu(PApplet app, String name, int width, int height){
       try{
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
       }catch(Exception ie){
 
       }
-    System.setProperty("apple.laf.useScreenMenuBar", "true");
     frame = (JFrame) ((processing.awt.PSurfaceAWT.SmoothCanvas)app.getSurface().getNative()).getFrame();
     fileDrop fd = new fileDrop(frame);
     frame.setTitle(name);
@@ -43,6 +44,7 @@ public class Menu {
     new_file.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         System.out.println("You have clicked on the new action");
+        pubEvent = arg0;
       }
     }
     );

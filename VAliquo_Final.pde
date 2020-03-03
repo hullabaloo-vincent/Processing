@@ -79,6 +79,9 @@ void mousePressed(){
       }
     }
   }
+  if (mouseButton == LEFT) {
+  } else if (mouseButton == RIGHT) {
+  }
 }
 
 void runEval(){
@@ -132,6 +135,7 @@ void runEval(){
   println("Neutral: " + sentNeu);
   println("Positive: " + sentPos);
 }
+
 
 
 void buildFrame() {
