@@ -17,6 +17,7 @@ public class Menu {
       }
     System.setProperty("apple.laf.useScreenMenuBar", "true");
     frame = (JFrame) ((processing.awt.PSurfaceAWT.SmoothCanvas)app.getSurface().getNative()).getFrame();
+    fileDrop fd = new fileDrop(frame);
     frame.setTitle(name);
     frame.setSize(width, height);
     frame.setLocationRelativeTo(null);
