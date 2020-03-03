@@ -9,6 +9,8 @@ the NLP toolkit).
 
 **Download Core NLP toolkit:** *https://stanfordnlp.github.io/CoreNLP/*
 
+**Parts of Speech Reference:** *https://sites.google.com/site/partofspeechhelp/home*
+
 **Core NLP jars used from toolkit:**
 1. ejml-0.23.jar
 2. standford-corenlp-3.9.2-javadoc.jar

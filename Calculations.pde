@@ -1,6 +1,6 @@
 class Calculations{
 
-    int compAdv, compAdj, interj, adj, vb = 0;
+    int compAdv, compAdj, interj, adj, vb, vb3rd, vbg, cNoun, advb = 0;
     
     ArrayList<String> sentimentCalc = new ArrayList<String>();
     ArrayList<String> pTerms = new ArrayList<String>(); //adds problematic terms to array
@@ -29,22 +29,27 @@ class Calculations{
 
     /*----------------------------------------*/
     /* Check if potentially problamatic parts of speech are present in the sentence*/
-    void speechChecker(String _output, String _stringValue, String _txtValue){
-        String[] abbr = {"RBR", "JJR", "UH", "JJ", "VB"};
+    void speechChecker(String _output, String _stringValue, String _txtValue, String _sentimentVal){
+        String[] abbr = {"RBR", "JJR", "UH", "JJ", "VB", "VBZ", "VBG", "NNS", "RB"};
         for (int i = 0; i < abbr.length -1; i++){
             if (_output.equalsIgnoreCase(abbr[i])){
-                println("Testing: " + abbr[i]);
+                println("Testing: " + abbr[i] + " (" + _txtValue + ")");
                 if (_stringValue.indexOf('\"') == -1){
-                    incrementValues(i);
+                    if (_sentimentVal.equalsIgnoreCase("Positive") || _sentimentVal.equalsIgnoreCase("Negative")){
+                        incrementValues(i);
+                        pTerms.add(_txtValue);
+                    }
                 }else{
                     /*there are quotes in this sentence. Run check to see if word is inside quotes or not*/
                     if (insideQuotes(_stringValue, _txtValue)){
                         //inside quotes, don't do anything
-                        println("Inside quotes");
                     }else{
                         //outside quotes
-                        incrementValues(i);
-                        println("Outside quotes");
+                        println("Sentiment check: " + _sentimentVal + " for " + _txtValue);
+                        if (_sentimentVal.equalsIgnoreCase("Positive") || _sentimentVal.equalsIgnoreCase("Negative")){
+                            incrementValues(i);
+                            pTerms.add(_txtValue);
+                        }
                     }
                 }
             }
@@ -70,6 +75,18 @@ class Calculations{
             break;
             case 4:
             vb+=1;
+            break;
+            case 5:
+            vb3rd+=1;
+            break;
+            case 6:
+            vbg+=1;
+            break;
+            case 7:
+            cNoun+=1;
+            break;
+            case 8:
+            advb+=1;
             break;
         }
     }
