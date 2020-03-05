@@ -12,7 +12,7 @@ class scaleVisualizer{
         yPos   = _yPos; 
     }
 
-    void show(){
+    void show(int _c){
         float multp     = 100;
 
         for (int i = 0; i< vertice1.length;i++){
@@ -24,7 +24,7 @@ class scaleVisualizer{
         }
 
         noStroke();
-        fill(255, 227, 13, 130);
+        fill(_c);
         for (int i = 0; i< deg;i++){
             triangle(xPos, yPos, vertice1[i].x, vertice1[i].y, vertice2[i].x, vertice2[i].y);
         }

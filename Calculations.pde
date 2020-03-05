@@ -16,10 +16,12 @@ class Calculations{
             for (int i = 0; i < aWordsSplit.length; i++){
                 //check if word word is present in string
                 if (_aText.indexOf(aWordsSplit[i]) != -1){
-                   if (!insideQuotes(_aText,aWordsSplit[i])){
-                       println("Problem word found: " + aWordsSplit[i]);
-                       pTerms.add(aWordsSplit[i]);
-                   }
+                    if (_aText.indexOf('\"') != -1){
+                        if (!insideQuotes(_aText,aWordsSplit[i])){
+                            println("Problem word found: " + aWordsSplit[i]);
+                            pTerms.add(aWordsSplit[i]);
+                        }
+                    }
                 }
             }
         }catch(FileNotFoundException fx){
@@ -36,10 +38,10 @@ class Calculations{
                 println("Testing: " + abbr[i] + " (" + _txtValue + ")");
                 if (_stringValue.indexOf('\"') == -1){
                     if (i == 0 || i ==1 || i == 5 || i == 6){
-                        if (_sentimentVal.equalsIgnoreCase("Positive") || _sentimentVal.equalsIgnoreCase("Negative")){
+                      //  if (_sentimentVal.equalsIgnoreCase("Positive") || _sentimentVal.equalsIgnoreCase("Negative")){
                             incrementValues(i);
                             pTerms.add(_txtValue);
-                        }
+                       // }
                     }
                 }else{
                     /*there are quotes in this sentence. Run check to see if word is inside quotes or not*/
@@ -47,12 +49,11 @@ class Calculations{
                         //inside quotes, don't do anything
                     }else{
                         //outside quotes
-                        println("Sentiment check: " + _sentimentVal + " for " + _txtValue);
                         if (i == 0 || i ==1 || i == 5 || i == 6){
-                            if (_sentimentVal.equalsIgnoreCase("Positive") || _sentimentVal.equalsIgnoreCase("Negative")){
+                           // if (_sentimentVal.equalsIgnoreCase("Positive") || _sentimentVal.equalsIgnoreCase("Negative")){
                                 incrementValues(i);
                                 pTerms.add(_txtValue);
-                            }
+                            //}
                         }
                     }
                 }
