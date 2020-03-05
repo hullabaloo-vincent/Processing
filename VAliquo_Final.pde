@@ -48,29 +48,31 @@ String log;
 GTextArea textArea;
 GTextArea calcLog;
 
+boolean revealNeg, revealPos = false;
+
 void setup(){
   buildFrame();
   smooth();
-  sentimentVis = new scaleVisualizer(600, 200);
+  sentimentVis = new scaleVisualizer(700, 200);
   calc = new Calculations();
   calc.checkPTerms("");
   buttons = new ArrayList<Button>();
-  buttons.add(new Button(550, 40, 100, 50, "Run", 20));
+  buttons.add(new Button(650, 40, 100, 50, "Run", 20));
   mainText = "But, despite his endorsements and win by a massive margin in South Carolina's primary on Saturday,"+
  " Biden remains vulnerable on a variety of fronts, including his repeated gaffes. On Monday, he slipped up twice"+
  " during a rally -- at one point, badly garbling the Declaration of Independence before giving up, and at another,"+
  " saying \"Super Thursday\" was coming up.";
 
-  textArea = new GTextArea(this, 0, 0, width/2+40, height/2, G4P.SCROLLBARS_BOTH | G4P.SCROLLBARS_AUTOHIDE);
-  textArea.setText(mainText, width/2);
+  textArea = new GTextArea(this, 0, 0, 400+40, height/2, G4P.SCROLLBARS_BOTH | G4P.SCROLLBARS_AUTOHIDE);
+  textArea.setText(mainText, 400);
   textArea.setLocalColorScheme(6, true);
   textArea.setSelectedTextStyle(G4P.WEIGHT, G4P.WEIGHT_BOLD);
   textArea.setPromptText("Please enter some text");
 
   log = "Log";
 
-  calcLog = new GTextArea(this, 0, 240, width/2+40, 200, G4P.SCROLLBARS_BOTH | G4P.SCROLLBARS_AUTOHIDE);
-  calcLog.setText(log, width/2);
+  calcLog = new GTextArea(this, 0, 240, 400+40, 200, G4P.SCROLLBARS_BOTH | G4P.SCROLLBARS_AUTOHIDE);
+  calcLog.setText(log, 400);
   calcLog.setLocalColorScheme(6, true);
   calcLog.setSelectedTextStyle(G4P.WEIGHT, G4P.WEIGHT_BOLD);
 
@@ -89,17 +91,24 @@ void draw(){
   }
   sentimentVis.show(sentColor);
   fill(#e3e6ff);
-  square(500, 200, 400);
+  square(600, 200, 400);
   textSize(20);
   fill(0);
-  text(textSentStart, 550, 240);
-  fill(#7a7a7a);
-  text(textSent, 700, 240);
+  text(textSentStart, 650, 240);
+  fill(sentColor);
+  text(textSent, 800, 240);
   fill(0);
   textAlign(CENTER, CENTER);
-  text(sentPercent_Neg, 610, 270);
-  text(sentPercent_Neu, 610, 300);
-  text(sentPercent_Pos, 610, 330);
+  text(sentPercent_Neg, 710, 270);
+  text(sentPercent_Neu, 710, 300);
+  text(sentPercent_Pos, 710, 330);
+  fill(#f22222);
+  if (revealNeg){
+    text ("Warning: Text contains a very negative sentence", 710, 360);
+  }
+  if (revealPos){
+    text ("Warning: Text contains a very positive sentence", 710, 390);
+  }
 }
 
 void mousePressed(){
@@ -113,7 +122,10 @@ void mousePressed(){
 }
 
 void runEval(){
-  String[] values = textArea.getText().split("\\."); //split text into sentences
+  String tmp = textArea.getText();
+  String textCleanup = tmp.replace("...","");
+  println(textCleanup);
+  String[] values = textCleanup.split("\\."); //split text into sentences
   textLength = values.length;
   log = log + "\n" + "_____________________________________";
   log = log + "\n" + "Checking " + values.length + " sentence(s)";
@@ -130,9 +142,15 @@ void runEval(){
     //check sentence sentiment [negative, neutral, positive]
     String sentenceSentiment = cs.getSentiment();
     calc.sentimentCalc.add(sentenceSentiment); //add calculated sentiment to arraylist
-    if (sentenceSentiment.equalsIgnoreCase("Negative")){sentNeg++;}
+    if (sentenceSentiment.equalsIgnoreCase("Negative") || sentenceSentiment.equalsIgnoreCase("Very Negative")){sentNeg++;}
     if (sentenceSentiment.equalsIgnoreCase("Neutral")){sentNeu++;}
-    if (sentenceSentiment.equalsIgnoreCase("Positive")){sentPos++;}
+    if (sentenceSentiment.equalsIgnoreCase("Positive") || sentenceSentiment.equalsIgnoreCase("Very Positive")){sentPos++;}
+    if (sentenceSentiment.equalsIgnoreCase("Very Negative")){
+      revealNeg = true;
+    }
+    if (sentenceSentiment.equalsIgnoreCase("Very Positive")){
+      revealPos = true;
+    }
 
     ArrayList<String> txtToken = calc.getSentenceText(tokenText);
     ArrayList<String> sentimentToken = calc.getSentenceText(tokenSentiment);
@@ -152,44 +170,52 @@ void runEval(){
     int max = 0;
     int sentIndex = 0;
     int[] decMax = {sentNeg, sentNeu, sentPos};
-    float sentScale = 90;
+    double sentScale = 90;
     for (int counter = 0; counter < decMax.length; counter++){
       if (decMax[counter] > max){
         max = decMax[counter];
         sentIndex = counter;
       }
     }
-    if (sentIndex == 0){textSent = "negative";sentColor = #f22222;sentScale = (270+90) / (100/((100 / textLength) * sentNeg));}
+
+    if (sentIndex == 0){
+      textSent = "negative";
+      sentColor = #f22222;
+      sentScale = 360 / ((double)100/(((double)100 / textLength) * sentNeg));
+    }
     if (sentIndex == 1){
       if (decMax[0] != 0 || decMax[2] != 0){
         if (decMax[0] > decMax[2]){
           //negative is higher
           textSent = "negative";
           sentColor = #f22222;
-          sentScale = (270+90) / (100/((100 / textLength) * sentNeg));
+          sentScale = (270+90) / ((double)100/(((double)100 / textLength) * sentNeg));
         }else{
           //positive is higher
           textSent = "positive";
           sentColor = #2264f2;
-          sentScale = (270+90) / (100/((100 / textLength) * sentPos));
+          sentScale = (270+90) / ((double)100/(((double)100 / textLength)  * sentPos));
         }
       }else{
         textSent = "neutral";
         sentColor = #c9c9c9;
-        sentScale = (270+90) / (100/((100 / textLength) * sentNeu));
+        sentScale = (270+90) / ((double)100/(((double)100 / textLength) * sentNeu));
       }
     }
-    if (sentIndex == 2){textSent = "positive";sentColor = #2264f2;sentScale = (270+90) / (100/((100 / textLength) * sentPos));}
-
-    sentimentVis.updateDegree(int(sentScale));
-    float negPerc = (100 / textLength) * sentNeg;
-    float neuPerc = (100 / textLength) * sentNeu;
-    float posPerc = (100 / textLength) * sentPos;
-    sentPercent_Neg = "Negative: " + negPerc + "%";
-    sentPercent_Neu = "Neutral: " + neuPerc + "%";
-    sentPercent_Pos = "Positive: " + posPerc + "%";
+    if (sentIndex == 2){
+      textSent = "positive";
+      sentColor = #2264f2;
+      sentScale = (270+90) / ((double)100/(((double)100 / textLength) * sentPos));
+    }
+    sentimentVis.updateDegree(int((float)sentScale));
+    double negPerc = ((double)100 / textLength) * sentNeg;
+    double neuPerc = ((double)100 / textLength) * sentNeu;
+    double posPerc = ((double)100 / textLength) * sentPos;
+    sentPercent_Neg = "Negative: " + round((float)negPerc) + "%";
+    sentPercent_Neu = "Neutral: " + round((float)neuPerc) + "%";
+    sentPercent_Pos = "Positive: " + round((float)posPerc) + "%";
   }
-  
+
   String[] textTest = calc.getArray(calc.pTerms);
   log = log + "\n" + "_____________________________________\n Some words that may have triggered the analyzer";
   log = log + "\n" + Arrays.toString(textTest);
@@ -208,5 +234,5 @@ void runEval(){
 
 
 void buildFrame() {
-  mp = new Menu(this, "Media", 800, 500);
+  mp = new Menu(this, "Media", 1000, 500);
 }

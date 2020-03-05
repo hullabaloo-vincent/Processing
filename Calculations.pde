@@ -102,13 +102,17 @@ class Calculations{
     boolean insideQuotes(String _input, String _text){
         String crop = _input;
         crop = crop.substring(crop.indexOf("\"") + 1);
-        crop = crop.substring(0, crop.lastIndexOf("\""));
-        if (crop.indexOf(_text) != -1){
-            //inside quotes
+        try{
+            crop = crop.substring(0, crop.lastIndexOf("\""));
+            if (crop.indexOf(_text) != -1){
+                //inside quotes
+                return true;
+            }else{
+                //outside quotes
+                return false;
+            }
+        }catch(StringIndexOutOfBoundsException se){
             return true;
-        }else{
-            //outside quotes
-            return false;
         }
     }
     /*----------------------------------------*/
