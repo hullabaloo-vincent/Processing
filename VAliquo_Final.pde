@@ -124,7 +124,6 @@ void mousePressed(){
 void runEval(){
   String tmp = textArea.getText();
   String textCleanup = tmp.replace("...","");
-  println(textCleanup);
   String[] values = textCleanup.split("\\."); //split text into sentences
   textLength = values.length;
   log = log + "\n" + "_____________________________________";
@@ -139,12 +138,14 @@ void runEval(){
     ArrayList<String> tokenText = cs.getToken("Text");
     ArrayList<String> tokenSentiment = cs.getToken("SentimentClass");
 
-    //check sentence sentiment [negative, neutral, positive]
+    //check sentence sentiment [very negative, negative, neutral, positive, very positive]
     String sentenceSentiment = cs.getSentiment();
+    println(values[i] + " : " + sentenceSentiment);
     calc.sentimentCalc.add(sentenceSentiment); //add calculated sentiment to arraylist
-    if (sentenceSentiment.equalsIgnoreCase("Negative") || sentenceSentiment.equalsIgnoreCase("Very Negative")){sentNeg++;}
+    if (sentenceSentiment.equalsIgnoreCase("Very Negative")){sentNeg++;}
     if (sentenceSentiment.equalsIgnoreCase("Neutral")){sentNeu++;}
     if (sentenceSentiment.equalsIgnoreCase("Positive") || sentenceSentiment.equalsIgnoreCase("Very Positive")){sentPos++;}
+
     if (sentenceSentiment.equalsIgnoreCase("Very Negative")){
       revealNeg = true;
     }
@@ -154,6 +155,29 @@ void runEval(){
 
     ArrayList<String> txtToken = calc.getSentenceText(tokenText);
     ArrayList<String> sentimentToken = calc.getSentenceText(tokenSentiment);
+    println("_______________________________________________________________");
+    if (!sentimentToken.contains("Negative") && sentenceSentiment.equalsIgnoreCase("Negative")){
+      int posValues = 0;
+      for (int g = 0; g < sentimentToken.size(); g++){
+        if (sentimentToken.get(g).equalsIgnoreCase("Positive")){
+          posValues++;
+        }
+      }
+      println("Pos values: " + posValues);
+      if (posValues > 1){
+        sentPos++;
+        println("Changing sentence to positive");
+      }else{
+        sentNeu++;
+        println("Changing sentence to negative");
+      }
+    }else{
+      if (!sentenceSentiment.equalsIgnoreCase("Neutral")){
+        sentNeg++;
+        println("Keeping negative status");
+      }
+    }
+    println("_______________________________________________________________");
     String[] textTest2 = calc.getArray(sentimentToken); //debug
     System.out.println(Arrays.toString(textTest2)); //debug
     ArrayList<String> token = new ArrayList<String>();
@@ -184,18 +208,18 @@ void runEval(){
       sentScale = 360 / ((double)100/(((double)100 / textLength) * sentNeg));
     }
     if (sentIndex == 1){
-      if (decMax[0] != 0 || decMax[2] != 0){
-        if (decMax[0] > decMax[2]){
-          //negative is higher
-          textSent = "negative";
-          sentColor = #f22222;
-          sentScale = (270+90) / ((double)100/(((double)100 / textLength) * sentNeg));
-        }else{
-          //positive is higher
-          textSent = "positive";
-          sentColor = #2264f2;
-          sentScale = (270+90) / ((double)100/(((double)100 / textLength)  * sentPos));
-        }
+        if ((decMax[1] < decMax[0] && decMax[1] < decMax[2])){
+          if (decMax[0] > decMax[2]){
+            //negative is higher
+            textSent = "negative";
+            sentColor = #f22222;
+            sentScale = (270+90) / ((double)100/(((double)100 / textLength) * sentNeg));
+          }else{
+            //positive is higher
+            textSent = "positive";
+            sentColor = #2264f2;
+            sentScale = (270+90) / ((double)100/(((double)100 / textLength)  * sentPos));
+          }
       }else{
         textSent = "neutral";
         sentColor = #c9c9c9;
@@ -207,10 +231,13 @@ void runEval(){
       sentColor = #2264f2;
       sentScale = (270+90) / ((double)100/(((double)100 / textLength) * sentPos));
     }
+
     sentimentVis.updateDegree(int((float)sentScale));
-    double negPerc = ((double)100 / textLength) * sentNeg;
-    double neuPerc = ((double)100 / textLength) * sentNeu;
-    double posPerc = ((double)100 / textLength) * sentPos;
+
+    double negPerc = (double)100 / calc.sentimentCalc.size() * sentNeg;
+    double neuPerc = (double)100 / calc.sentimentCalc.size() * sentNeu;
+    double posPerc = (double)100 / calc.sentimentCalc.size() * sentPos;
+    println(negPerc);
     sentPercent_Neg = "Negative: " + round((float)negPerc) + "%";
     sentPercent_Neu = "Neutral: " + round((float)neuPerc) + "%";
     sentPercent_Pos = "Positive: " + round((float)posPerc) + "%";
