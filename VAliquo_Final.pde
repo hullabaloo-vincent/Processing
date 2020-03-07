@@ -258,8 +258,6 @@ void runEval(){
   calcLog.setText(log, width/2);
 }
 
-
-
 void buildFrame() {
   mp = new Menu(this, "Media", 1000, 500);
 }
