@@ -44,6 +44,7 @@ Button b_run;
 String mainText;
 String infoText;
 String log;
+String docText;
 
 GTextArea textArea;
 GTextArea calcLog;
@@ -140,11 +141,15 @@ void runEval(){
 
     //check sentence sentiment [very negative, negative, neutral, positive, very positive]
     String sentenceSentiment = cs.getSentiment();
+    String sentimentColorVal = "#c9c9c9";
+    String sentimentColorTextVal = "#c9c9c9";
+
     println(values[i] + " : " + sentenceSentiment);
     calc.sentimentCalc.add(sentenceSentiment); //add calculated sentiment to arraylist
-    if (sentenceSentiment.equalsIgnoreCase("Very Negative")){sentNeg++;}
-    if (sentenceSentiment.equalsIgnoreCase("Neutral")){sentNeu++;}
-    if (sentenceSentiment.equalsIgnoreCase("Positive") || sentenceSentiment.equalsIgnoreCase("Very Positive")){sentPos++;}
+    if (sentenceSentiment.equalsIgnoreCase("Very Negative")){sentNeg++;sentimentColorVal = "#ffa6a6 ";}
+    if (sentenceSentiment.equalsIgnoreCase("Neutral")){sentNeu++;sentimentColorVal = "#ebebeb";}
+    if (sentenceSentiment.equalsIgnoreCase("Positive")){sentPos++;sentimentColorVal = "#a1bfff";}
+    if (sentenceSentiment.equalsIgnoreCase("Very Positive")){sentPos++;sentimentColorVal = "#a1bfff";}
 
     if (sentenceSentiment.equalsIgnoreCase("Very Negative")){
       revealNeg = true;
@@ -155,28 +160,34 @@ void runEval(){
 
     ArrayList<String> txtToken = calc.getSentenceText(tokenText);
     ArrayList<String> sentimentToken = calc.getSentenceText(tokenSentiment);
+    //0 = very negative; 1 = negative; 2 = neutral; 3 = positive; 4 = very positive;
     println("_______________________________________________________________");
     if (!sentimentToken.contains("Negative") && sentenceSentiment.equalsIgnoreCase("Negative")){
       int posValues = 0;
       for (int g = 0; g < sentimentToken.size(); g++){
         if (sentimentToken.get(g).equalsIgnoreCase("Positive")){
           posValues++;
+          sentimentColorVal = "#a1bfff";
         }
       }
       println("Pos values: " + posValues);
       if (posValues > 1){
         sentPos++;
+        sentimentColorVal = "#a1bfff";
         println("Changing sentence to positive");
       }else{
         sentNeu++;
+        sentimentColorVal = "#ebebeb";
         println("Changing sentence to negative");
       }
     }else{
       if (!sentenceSentiment.equalsIgnoreCase("Neutral")){
         sentNeg++;
+        sentimentColorVal = "#ffa6a6";
         println("Keeping negative status");
       }
     }
+
     println("_______________________________________________________________");
     String[] textTest2 = calc.getArray(sentimentToken); //debug
     System.out.println(Arrays.toString(textTest2)); //debug
@@ -186,6 +197,22 @@ void runEval(){
         cleanOutput = cleanOutput.substring(cleanOutput.lastIndexOf("=") + 1);
         cleanOutput = cleanOutput.substring(0, cleanOutput.length() - 1);
         token.add(cleanOutput);
+
+        /*
+        #941212 = very negative
+        #f22222 = negative
+        #c9c9c9 = neutral
+        #2264f2 = positive
+        #17419c = very positive
+        */
+
+        if (sentimentToken.get(j).equalsIgnoreCase("Very Negative")){sentimentColorTextVal = "#941212";}
+        if (sentimentToken.get(j).equalsIgnoreCase("Negative")){sentimentColorTextVal = "#f22222";}
+        if (sentimentToken.get(j).equalsIgnoreCase("Neutral")){sentimentColorTextVal = "#c9c9c9";}
+        if (sentimentToken.get(j).equalsIgnoreCase("Positive")){sentimentColorTextVal = "#2264f2";}
+        if (sentimentToken.get(j).equalsIgnoreCase("Very Positive")){sentimentColorTextVal = "#17419c";}
+
+        docText = docText + "<span style=\"background-color:" + sentimentColorVal +";color:" + sentimentColorTextVal + ";\"> " + txtToken.get(j)  + " </span>";
         calc.speechChecker(cleanOutput, values[i], txtToken.get(j), sentimentToken.get(j));
     }
     calc.checkPTerms(values[i]);
@@ -256,6 +283,7 @@ void runEval(){
   log = log + "\n" + "Verb gerund: " + calc.vbg;
   log = log + "\n" + "Common Noun: " + calc.cNoun;
   calcLog.setText(log, width/2);
+  documentExport de = new documentExport(docText, "Testing123");
 }
 
 void buildFrame() {
