@@ -28,6 +28,7 @@
 */
 
 import g4p_controls.*;
+import java.text.BreakIterator;
 
 Menu mp;
 Calculations calc;
@@ -44,6 +45,7 @@ Button b_run;
 String mainText;
 String infoText;
 String log;
+String styleText;
 String docText;
 
 GTextArea textArea;
@@ -83,6 +85,9 @@ void setup(){
   sentPercent_Neu = "Neutral: 0%";
   sentPercent_Pos = "Positive: 0%";
   sentColor = #c9c9c9;
+
+  styleText = " ";
+  docText = " ";
 }
 
 void draw(){
@@ -125,15 +130,25 @@ void mousePressed(){
 void runEval(){
   String tmp = textArea.getText();
   String textCleanup = tmp.replace("...","");
-  String[] values = textCleanup.split("\\."); //split text into sentences
-  textLength = values.length;
+  ArrayList<String> values = new ArrayList<String>();
+
+  BreakIterator iterator = BreakIterator.getSentenceInstance(Locale.US);
+  iterator.setText(textCleanup);
+  int index = 0;
+  while (iterator.next() != BreakIterator.DONE) {
+    String sentence = textCleanup.substring(index, iterator.current());
+    values.add(sentence);
+    index = iterator.current();
+  }
+
+  textLength = values.size();
   log = log + "\n" + "_____________________________________";
-  log = log + "\n" + "Checking " + values.length + " sentence(s)";
+  log = log + "\n" + "Checking " + values.size() + " sentence(s)";
   log = log + "\n" + "_____________________________________";
   calcLog.setText(log, width/2);
-  for (int i = 0; i < values.length; i++){
+  for (int i = 0; i < values.size(); i++){
 
-    checkSentence cs = new checkSentence(values[i]);
+    checkSentence cs = new checkSentence(values.get(i));
     //check part of speech
     ArrayList<String> tokenRaw = cs.getToken("PartOfSpeech");
     ArrayList<String> tokenText = cs.getToken("Text");
@@ -144,9 +159,10 @@ void runEval(){
     String sentimentColorVal = "#c9c9c9";
     String sentimentColorTextVal = "#c9c9c9";
 
-    println(values[i] + " : " + sentenceSentiment);
+    println(values.get(i) + " : " + sentenceSentiment);
     calc.sentimentCalc.add(sentenceSentiment); //add calculated sentiment to arraylist
     if (sentenceSentiment.equalsIgnoreCase("Very Negative")){sentNeg++;sentimentColorVal = "#ffa6a6 ";}
+    //if (sentenceSentiment.equalsIgnoreCase("Negative")){sentNeg++;sentimentColorVal = "#ffa6a6";}
     if (sentenceSentiment.equalsIgnoreCase("Neutral")){sentNeu++;sentimentColorVal = "#ebebeb";}
     if (sentenceSentiment.equalsIgnoreCase("Positive")){sentPos++;sentimentColorVal = "#a1bfff";}
     if (sentenceSentiment.equalsIgnoreCase("Very Positive")){sentPos++;sentimentColorVal = "#a1bfff";}
@@ -162,12 +178,11 @@ void runEval(){
     ArrayList<String> sentimentToken = calc.getSentenceText(tokenSentiment);
     //0 = very negative; 1 = negative; 2 = neutral; 3 = positive; 4 = very positive;
     println("_______________________________________________________________");
-    if (!sentimentToken.contains("Negative") && sentenceSentiment.equalsIgnoreCase("Negative")){
+    if (sentenceSentiment.equalsIgnoreCase("Negative") && !sentimentToken.contains("Negative")){
       int posValues = 0;
       for (int g = 0; g < sentimentToken.size(); g++){
         if (sentimentToken.get(g).equalsIgnoreCase("Positive")){
           posValues++;
-          sentimentColorVal = "#a1bfff";
         }
       }
       println("Pos values: " + posValues);
@@ -178,19 +193,35 @@ void runEval(){
       }else{
         sentNeu++;
         sentimentColorVal = "#ebebeb";
-        println("Changing sentence to negative");
+        println("Changing sentence to neutral");
       }
     }else{
-      if (!sentenceSentiment.equalsIgnoreCase("Neutral")){
+      if (!sentenceSentiment.equalsIgnoreCase("Neutral") && !sentenceSentiment.equalsIgnoreCase("Positive")){
         sentNeg++;
         sentimentColorVal = "#ffa6a6";
         println("Keeping negative status");
       }
     }
 
+    styleText = styleText + ".s"+i+"{\n"+
+        "background: #e3e6ff;\n"+
+        "-webkit-transition: background 1s;\n"+
+        "transition: background 1s;\n"+
+    "}\n"+
+    ".s"+i+":hover > span {\n"+
+        "background: "+sentimentColorVal+";\n"+
+	   "color: black !important;\n"+
+    "}\n";
+    int se = i+1; //increment sentence for document output
+    docText = docText + 
+    "<tr>\n"+
+    "<td nowrap>\n"+
+    "<h4>Sentence" + se + "</h4>\n"+
+    "</td>\n"+
+    "<td>\n"+
+    "<div class=\"s"+i+"\">\n";
+
     println("_______________________________________________________________");
-    String[] textTest2 = calc.getArray(sentimentToken); //debug
-    System.out.println(Arrays.toString(textTest2)); //debug
     ArrayList<String> token = new ArrayList<String>();
     for(int j = 0; j < tokenRaw.size(); j++){
         String cleanOutput = tokenRaw.get(j);
@@ -212,10 +243,11 @@ void runEval(){
         if (sentimentToken.get(j).equalsIgnoreCase("Positive")){sentimentColorTextVal = "#2264f2";}
         if (sentimentToken.get(j).equalsIgnoreCase("Very Positive")){sentimentColorTextVal = "#17419c";}
 
-        docText = docText + "<span style=\"background-color:" + sentimentColorVal +";color:" + sentimentColorTextVal + ";\"> " + txtToken.get(j)  + " </span>";
-        calc.speechChecker(cleanOutput, values[i], txtToken.get(j), sentimentToken.get(j));
+        docText = docText + "<span style=\"color:" + sentimentColorTextVal + ";\"> " + txtToken.get(j)  + " </span>";
+        calc.speechChecker(cleanOutput, values.get(i), txtToken.get(j), sentimentToken.get(j));
     }
-    calc.checkPTerms(values[i]);
+    docText = docText + "</td></tr>\n</div>\n";
+    calc.checkPTerms(values.get(i));
     /* Update text and visualizer in realtime */
     // for visualizer, 90 is 0 and 270 is 100
     int max = 0;
@@ -283,7 +315,13 @@ void runEval(){
   log = log + "\n" + "Verb gerund: " + calc.vbg;
   log = log + "\n" + "Common Noun: " + calc.cNoun;
   calcLog.setText(log, width/2);
-  documentExport de = new documentExport(docText, "Testing123");
+  mp.activateReport();
+}
+
+void getScreen(int _x, int _y, int _w, int _h){
+  PImage slice;
+  slice = get(_x, _y, _w, _h);
+  slice.save("data/slice.png");
 }
 
 void buildFrame() {

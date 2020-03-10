@@ -15,6 +15,7 @@ class checkSentence{
     String sProperty;
     String sentimentVal;
     Annotation annotation;
+    
 
     checkSentence(String _userSentence){
       userSentence = _userSentence;
