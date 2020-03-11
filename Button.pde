@@ -25,7 +25,7 @@ class Button {
       fill(#fff0f0);
     }
     rect(x, y, bW, bH, 7); //draw the button and round the corners
-    textAlign(CENTER, CENTER);
+    textAlign(CENTER, CENTER); //centers text
     fill(0);
     textSize(textSize);
     text(buttonText, x+(bW/2), y+(bH/2)-5);

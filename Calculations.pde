@@ -117,7 +117,6 @@ class Calculations{
     }
     /*----------------------------------------*/
 
-    
     /*----------------------------------------*/
     /* Turns the raw data from the NLP API into an easily readable string */
     ArrayList<String> getSentenceText(ArrayList<String> _base){
