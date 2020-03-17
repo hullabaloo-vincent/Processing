@@ -19,7 +19,6 @@ the NLP toolkit).
 5. standford-corenlp-3.9.2.jar
 
 **How to run source:**
-1. Create a folder 'code' in the same directory as .pde sketches.
-2. In 'code' folder, copy the following jars from the CoreNLP library:
+1. In 'code' folder, copy the following jars from the CoreNLP library:
   standford-corenlp-3.9.2-models.jar
-3. Open 'VAliquo_Final.pde' using Processing IDE or your preferred IDE and run
+2. Open 'VAliquo_Final.pde' using Processing IDE or your preferred IDE and run
