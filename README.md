@@ -1,4 +1,4 @@
-# Opinion Detection Tool in Processing
+# Sentiment and Strong Vocabulary Dectection Tool in Processing
 Program made by Vincent Aliquo for ITGM 326 at SCAD
 
 **Goal of application:** Software that rates text based on the number of flavorful words and tones using
