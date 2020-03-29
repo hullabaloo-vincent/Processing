@@ -31,10 +31,10 @@ class scaleVisualizer{
 
         // inner circle
         noStroke();
-        fill(0);
+        fill(#2c1752);
         ellipse(xPos, yPos, 130, 130);
         noFill();
-        stroke(0);
+        stroke(#2c1752);
         strokeWeight(6);
         //border
         ellipse(xPos, yPos, 200, 200);

@@ -321,6 +321,7 @@ void runEval(){
     sentPercent_Pos = "Positive: " + round((float)posPerc) + "%";
   }
 
+  /* Print log to text area */
   String[] textTest = calc.getArray(calc.pTerms);
   log = log + "\n" + "_____________________________________\n Some words that may have triggered the analyzer";
   log = log + "\n" + Arrays.toString(textTest);
