@@ -351,6 +351,6 @@ void getScreen(int _x, int _y, int _w, int _h){
 /*----------------------------------------*/
 /* Builds the window */
 void buildFrame() {
-  mp = new Menu(this, "Media", 1000, 500); //PApplet, Program Title, Width, Height
+  mp = new Menu(this, "Sentiment and Strong Vocabulary Dectection Tool", 1000, 500); //PApplet, Program Title, Width, Height
 }
 /*----------------------------------------*/
