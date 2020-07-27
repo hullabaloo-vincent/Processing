@@ -1,5 +1,5 @@
 # Sentiment and Strong Vocabulary Detection Tool in Processing
-Program made by Vincent Aliquo for ITGM 326 at SCAD
+Program made by Vincent Aliquo
 
 **Goal of application:** Software that rates text based on the number of flavorful words and tones using
 the Stanford CoreNLP Natural Language Processing Toolkit. Models are not included in source (download through
