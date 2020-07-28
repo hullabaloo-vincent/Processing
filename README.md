@@ -20,5 +20,5 @@ the NLP toolkit).
 
 **How to run source:**
 1. In `code`folder, copy the following jars from the CoreNLP library:
-  `tandford-corenlp-3.9.2-models.jar`
+  `standford-corenlp-3.9.2-models.jar`
 2. Open `VAliquo_Final.pde` using Processing IDE or your preferred IDE and run
